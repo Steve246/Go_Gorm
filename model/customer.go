@@ -1,4 +1,4 @@
-package main
+package model
 
 type Customer struct {
 	Id        string `gorm:"primaryKey"`
@@ -13,5 +13,5 @@ type Customer struct {
 
 func (Customer) TableName() string {
 	//ini akan membuat sebuah nama tabel (customisasi nama tabel)
-	return "mst_customer"
+	return "new_customer"
 }
