@@ -1,10 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"go_gorm/config"
-	"go_gorm/repo"
-	"log"
 )
 
 func main() {
@@ -183,15 +180,17 @@ func main() {
 
 	//FindBy
 
-	repo := repo.NewCustomerRepository(db)
+	// repo := repo.NewCustomerRepository(db)
 
 	// customers01 := []model.Customer{}
 
-	customers01, err := repo.FindBy("name LIKE ? AND is_status = ?", "%S%", true)
+	// customers01, err := repo.FindBy("name LIKE ? AND is_status = ?", "%S%", true)
 
-	if err != nil {
-		log.Println(err.Error())
-	}
-	fmt.Println("Find By:", customers01)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+	// fmt.Println("Find By:", customers01)
+
+	//count
 
 }

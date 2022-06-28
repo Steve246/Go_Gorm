@@ -28,6 +28,49 @@ type customerRepository struct {
 	db *gorm.DB
 }
 
+//nambain count, group by, and paging
+
+func (c *customerRepository) Count(groupBy string) (int, error) {
+	var total int
+	result := c.db.Model(&model.Customer{}).Select("Count(*)").Group(groupBy).First(&total)
+
+	if err := result.Error; err != nil {
+		return 0, err
+	}
+	return total, nil
+}
+
+func (c *customerRepository) GroupBy(result interface{}, selectedBy string, whereBy map[string]interface{}, groupBy string) error {
+	res := c.db.Model(&model.Customer{}).Select(selectedBy).Where(whereBy).Group(groupBy).Find(result)
+
+	if err := res.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		} else {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (c *customerRepository) Paging(page int, itemPerPage int) (interface{}, error) {
+	var customers []model.Customer
+
+	offset := itemPerPage * (page - 1)
+	res := c.db.Order("created_at").Limit(itemPerPage).Offset(offset).Find(&customers)
+
+	if err := res.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		} else {
+			return nil, err
+		}
+	}
+
+	return customers, nil
+}
+
 func (c *customerRepository) FindFirstBy(by map[string]interface{}) (model.Customer, error) {
 	var customer model.Customer
 	result := c.db.Unscoped().Where(by).First(&customer)
