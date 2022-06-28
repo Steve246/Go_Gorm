@@ -187,7 +187,7 @@ func main() {
 
 	// customers01 := []model.Customer{}
 
-	customers01, err := repo.FindBy("name LIKE ? AND is_status = ?", "%J%", true)
+	customers01, err := repo.FindBy("name LIKE ? AND is_status = ?", "%S%", true)
 
 	if err != nil {
 		log.Println(err.Error())
