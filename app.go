@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"go_gorm/config"
 	"go_gorm/model"
 	"go_gorm/repo"
@@ -120,18 +121,34 @@ func main() {
 
 	//nambain delete
 
-	repo := repo.NewCustomerRepository(db)
+	// repo := repo.NewCustomerRepository(db)
 
-	customer := model.Customer{
-		Id: "001",
-	}
+	// customer := model.Customer{
+	// 	Id: "001",
+	// }
 
 	// err := repo.Delete(customer.Id) //hard delete
 
-	err := repo.Delete(&customer) //soft delete
+	// err := repo.Delete(&customer) //soft delete
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	//ad find by id
+
+	repo := repo.NewCustomerRepository(db)
+
+	customer001 := model.Customer{
+		Id: "003",
+	}
+
+	customerFindById, err := repo.FindById(customer001.Id)
 
 	if err != nil {
 		log.Println(err.Error())
 	}
+
+	fmt.Println(customerFindById)
 
 }
