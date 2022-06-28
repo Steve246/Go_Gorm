@@ -11,7 +11,7 @@ type Customer struct {
 	BaseModel BaseModel `gorm:"embedded"`
 }
 
-func (Customer) TableName() string {
-	//ini akan membuat sebuah nama tabel (customisasi nama tabel)
-	return "new_customer"
-}
+// func (Customer) TableName() string {
+// 	//ini akan membuat sebuah nama tabel (customisasi nama tabel)
+// 	return "new_customer"
+// }

@@ -3,6 +3,8 @@ package main
 import (
 	"go_gorm/config"
 	"go_gorm/model"
+	"go_gorm/repo"
+	"log"
 )
 
 func main() {
@@ -55,10 +57,30 @@ func main() {
 
 	defer config.DBTutup(enigmaDb)
 
-	err := db.AutoMigrate(model.Customer{}) //auto migrate buat bikin table
+	// err := db.AutoMigrate(model.Customer{})
+	//auto migrate buat bikin table
+
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	//add repo customer_repo
+
+	repo := repo.NewCustomerRepository(db)
+
+	customer := model.Customer{
+		Id:      "001",
+		Name:    "Ronaldohi",
+		Address: "Jakarta",
+		Phone:   "0871239097",
+		Email:   "ronald.fgi@gmail.com",
+		Balance: 10000,
+	}
+
+	err := repo.Create(&customer)
 
 	if err != nil {
-		panic(err)
+		log.Println(err.Error())
 	}
 
 }
