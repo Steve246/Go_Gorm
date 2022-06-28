@@ -69,11 +69,11 @@ func main() {
 	// repo := repo.NewCustomerRepository(db)
 
 	// customer := model.Customer{
-	// 	Id:      "004",
-	// 	Name:    "Oktabian Elamor",
+	// 	Id:      "005",
+	// 	Name:    "Oban Paor",
 	// 	Address: "Bulan",
 	// 	Phone:   "0877666333",
-	// 	Email:   "okta.ela@gmail.com",
+	// 	Email:   "Oban.Paor@gmail.com",
 	// 	Balance: 100000,
 	// }
 
@@ -102,17 +102,33 @@ func main() {
 
 	//nambain update pake map
 
+	// repo := repo.NewCustomerRepository(db)
+
+	// customer := model.Customer{
+	// 	Id: "002",
+	// }
+
+	// err := repo.UpdatePakeMap(&customer, map[string]interface{}{
+	// 	"Address":   "",
+	// 	"balance":   10000,
+	// 	"is_status": false,
+	// })
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	//nambain delete
+
 	repo := repo.NewCustomerRepository(db)
 
 	customer := model.Customer{
-		Id: "002",
+		Id: "001",
 	}
 
-	err := repo.UpdatePakeMap(&customer, map[string]interface{}{
-		"Address":   "",
-		"balance":   10000,
-		"is_status": false,
-	})
+	// err := repo.Delete(customer.Id) //hard delete
+
+	err := repo.Delete(&customer) //soft delete
 
 	if err != nil {
 		log.Println(err.Error())

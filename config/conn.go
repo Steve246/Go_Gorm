@@ -3,6 +3,7 @@ package config
 import (
 	"database/sql"
 	"fmt"
+	"go_gorm/model"
 	"go_gorm/utils"
 	"os"
 
@@ -34,9 +35,15 @@ func (c *Config) initDb() {
 
 	if env == "dev" {
 		c.Db = db.Debug()
-	} else {
-		c.Db = db //dbnya gorm.Db
+	} else if env == "migration" {
+		c.Db = db.Debug()
+		err := c.Db.AutoMigrate(&model.Customer{})
 
+		if err != nil {
+			return
+		}
+	} else {
+		c.Db = db
 	}
 
 }

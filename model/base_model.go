@@ -1,8 +1,9 @@
 package model
 
 import (
-	"database/sql"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // type DeletedAt gorm.DeletedAt
@@ -10,5 +11,6 @@ import (
 type BaseModel struct {
 	CreatedAt time.Time
 	UpdateAt  time.Time
-	DeletedAt sql.NullTime
+	// DeletedAt sql.NullTime
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }

@@ -12,10 +12,22 @@ type CustomerRepository interface {
 	//pake map
 
 	UpdatePakeStruct(customer *model.Customer, by model.Customer) error //pake struct
+
+	Delete(customer *model.Customer) error
 }
 
 type customerRepository struct {
 	db *gorm.DB
+}
+
+// func (c *customerRepository) Delete(id string) error {
+// 	result := c.db.Delete(&model.Customer{}, id).Error
+// 	return result
+// }
+
+func (c *customerRepository) Delete(customer *model.Customer) error {
+	result := c.db.Delete(customer).Error
+	return result
 }
 
 func (c *customerRepository) UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error {
