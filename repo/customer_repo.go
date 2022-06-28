@@ -19,16 +19,59 @@ type CustomerRepository interface {
 	FindById(id string) (model.Customer, error)
 	//tambain find by id
 
+	FindFirstBy(by map[string]interface{}) (model.Customer, error)
+	FindAllBy(by map[string]interface{}) ([]model.Customer, error)
+	FindBy(by string, vals ...interface{}) ([]model.Customer, error)
 }
 
 type customerRepository struct {
 	db *gorm.DB
 }
 
-// func (c *customerRepository) Delete(id string) error {
-// 	result := c.db.Delete(&model.Customer{}, id).Error
-// 	return result
-// }
+func (c *customerRepository) FindFirstBy(by map[string]interface{}) (model.Customer, error) {
+	var customer model.Customer
+	result := c.db.Unscoped().Where(by).First(&customer)
+
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return customer, nil
+		} else {
+			return customer, err
+		}
+	}
+	return customer, nil
+}
+
+func (c *customerRepository) FindBy(by string, vals ...interface{}) ([]model.Customer, error) {
+	var customer []model.Customer
+	result := c.db.Unscoped().Where(by, vals...).Find(&customer)
+
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+
+			return customer, nil
+		} else {
+
+			return customer, err
+		}
+
+	}
+	return customer, nil
+}
+
+func (c *customerRepository) FindAllBy(by map[string]interface{}) ([]model.Customer, error) {
+	var customer []model.Customer
+	result := c.db.Unscoped().Where(by).Find(&customer)
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return customer, nil
+		} else {
+			return customer, err
+		}
+	}
+
+	return customer, nil
+}
 
 func (c *customerRepository) FindById(id string) (model.Customer, error) {
 	var customer model.Customer
@@ -45,6 +88,11 @@ func (c *customerRepository) FindById(id string) (model.Customer, error) {
 
 	return customer, nil
 }
+
+// func (c *customerRepository) Delete(id string) error {
+// 	result := c.db.Delete(&model.Customer{}, id).Error
+// 	return result
+// } //kalau mau hard delete
 
 func (c *customerRepository) Delete(customer *model.Customer) error {
 	result := c.db.Delete(customer).Error

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"go_gorm/config"
-	"go_gorm/model"
 	"go_gorm/repo"
 	"log"
 )
@@ -137,18 +136,62 @@ func main() {
 
 	//ad find by id
 
+	// repo := repo.NewCustomerRepository(db)
+
+	// customer001 := model.Customer{
+	// 	Id: "003",
+	// }
+
+	// customerFindById, err := repo.FindById(customer001.Id)
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	// fmt.Println(customerFindById)
+
+	//FindbyAllby
+
+	// repo := repo.NewCustomerRepository(db)
+	// customers := []model.Customer{}
+
+	// customers, err := repo.FindAllBy(map[string]interface{}{
+	// 	"address": "Bulan",
+	// })
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+	// fmt.Println(customers)
+
+	//FindFirstBy
+
+	// repo := repo.NewCustomerRepository(db)
+
+	// customers := model.Customer{}
+
+	// customers, err := repo.FindFirstBy(map[string]interface{}{
+	// 	"address": "Jakarta",
+	// })
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+	// fmt.Println(customers)
+
+	// fmt.Println("Find First BY:", customers)
+
+	//FindBy
+
 	repo := repo.NewCustomerRepository(db)
 
-	customer001 := model.Customer{
-		Id: "003",
-	}
+	// customers01 := []model.Customer{}
 
-	customerFindById, err := repo.FindById(customer001.Id)
+	customers01, err := repo.FindBy("name LIKE ? AND is_status = ?", "%J%", true)
 
 	if err != nil {
 		log.Println(err.Error())
 	}
-
-	fmt.Println(customerFindById)
+	fmt.Println("Find By:", customers01)
 
 }
