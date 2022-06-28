@@ -66,18 +66,53 @@ func main() {
 
 	//add repo customer_repo
 
+	// repo := repo.NewCustomerRepository(db)
+
+	// customer := model.Customer{
+	// 	Id:      "004",
+	// 	Name:    "Oktabian Elamor",
+	// 	Address: "Bulan",
+	// 	Phone:   "0877666333",
+	// 	Email:   "okta.ela@gmail.com",
+	// 	Balance: 100000,
+	// }
+
+	// err := repo.Create(&customer)
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	//nambain update pake struct
+
+	// repo := repo.NewCustomerRepository(db)
+
+	// customer := model.Customer{
+	// 	Id: "002",
+	// }
+
+	// err := repo.UpdatePakeStruct(&customer, model.Customer{
+	// 	Address: "Jakarta",
+	// 	Balance: 20000,
+	// })
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	//nambain update pake map
+
 	repo := repo.NewCustomerRepository(db)
 
 	customer := model.Customer{
-		Id:      "001",
-		Name:    "Ronaldohi",
-		Address: "Jakarta",
-		Phone:   "0871239097",
-		Email:   "ronald.fgi@gmail.com",
-		Balance: 10000,
+		Id: "002",
 	}
 
-	err := repo.Create(&customer)
+	err := repo.UpdatePakeMap(&customer, map[string]interface{}{
+		"Address":   "",
+		"balance":   10000,
+		"is_status": false,
+	})
 
 	if err != nil {
 		log.Println(err.Error())
