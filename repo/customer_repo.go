@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"errors"
 	"go_gorm/model"
 
 	"gorm.io/gorm"
@@ -14,6 +15,10 @@ type CustomerRepository interface {
 	UpdatePakeStruct(customer *model.Customer, by model.Customer) error //pake struct
 
 	Delete(customer *model.Customer) error
+
+	FindById(id string) (model.Customer, error)
+	//tambain find by id
+
 }
 
 type customerRepository struct {
@@ -24,6 +29,22 @@ type customerRepository struct {
 // 	result := c.db.Delete(&model.Customer{}, id).Error
 // 	return result
 // }
+
+func (c *customerRepository) FindById(id string) (model.Customer, error) {
+	var customer model.Customer
+	result := c.db.Unscoped().First(&customer, "id = ?", id)
+
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return customer, nil
+		} else {
+			return customer, err
+		}
+
+	}
+
+	return customer, nil
+}
 
 func (c *customerRepository) Delete(customer *model.Customer) error {
 	result := c.db.Delete(customer).Error
