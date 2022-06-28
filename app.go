@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"go_gorm/config"
 	"go_gorm/model"
 )
@@ -45,12 +44,16 @@ func main() {
 
 	enigmaDb, _ := db.DB() //convert ke sql.DB
 
-	defer func(enigmaDb *sql.DB) {
-		err := enigmaDb.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(enigmaDb)
+	// defer func(enigmaDb *sql.DB) {
+	// 	err := enigmaDb.Close()
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+	// }(enigmaDb)
+
+	//defer atas jadi defer bawah
+
+	defer config.DBTutup(enigmaDb)
 
 	err := db.AutoMigrate(model.Customer{}) //auto migrate buat bikin table
 

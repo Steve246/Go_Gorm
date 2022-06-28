@@ -1,6 +1,7 @@
 package config
 
 import (
+	"database/sql"
 	"fmt"
 	"go_gorm/utils"
 	"os"
@@ -20,8 +21,8 @@ func (c *Config) initDb() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 
-	// urutan url koneksi ke db postgres
-	// postgres://dbUser:dbPassword@dbHost:dbPort/dbName
+	// urutan url koneksi ke db postgres buat gorm
+	// localhost:postgres@12345678:db_enigma_shop_v2/5432
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", dbHost, dbUser, dbPassword, dbName, dbPort)
 
@@ -35,6 +36,14 @@ func (c *Config) initDb() {
 
 func (c *Config) DbConn() *gorm.DB {
 	return c.Db
+}
+
+func (c *Config) DBTutup(*sql.DB) {
+	db, err := c.Db.DB()
+	utils.IsError(err)
+	err = db.Close()
+	utils.IsError(err)
+
 }
 
 func NewConfigDB() Config {
