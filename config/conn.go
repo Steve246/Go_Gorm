@@ -37,11 +37,12 @@ func (c *Config) initDb() {
 		c.Db = db.Debug()
 	} else if env == "migration" {
 		c.Db = db.Debug()
-		err := c.Db.AutoMigrate(&model.Customer{})
+		err := c.Db.AutoMigrate(&model.Customer{}, &model.Address{})
 
 		if err != nil {
 			return
 		}
+
 	} else {
 		c.Db = db
 	}

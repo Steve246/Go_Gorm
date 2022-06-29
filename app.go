@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"go_gorm/config"
 	"go_gorm/model"
 	"go_gorm/repo"
-	"log"
+	"go_gorm/utils"
 )
 
 func main() {
@@ -39,37 +38,103 @@ func main() {
 
 	// repo.Create(&customer01)
 
-	//delete
+	//nambain update pake map --> ubah password, username tapi bikin nambah kolom
 
-	//nambain update pake map
+	// repo := repo.NewCustomerRepository(db)
+
+	// customer02 := model.Customer{
+	// 	Id: "001",
+	// } //cari id
+
+	// customer02, err1 := repo.FindById(customer02.Id) //ambil data dari find by id
+
+	// if err1 != nil {
+	// 	log.Println(err1.Error())
+	// }
+
+	// fmt.Println("Ini Customer02")
+	// fmt.Println(customer02)
+
+	// userCredential01 := model.UserCredential{
+	// 	UserName: "bukitbulan",
+	// 	Password: "pasbulan",
+	// } //masukin apa yang mau diupdate
+
+	// customer02.UserCredential = userCredential01
+	// err2 := repo.UpdateBy(&customer02)
+
+	// if err2 != nil {
+	// 	log.Println(err2.Error())
+	// }
+
+	//update with preload --> user_name sama tapi password keubah tanpa nambah baris kolom
+
+	// repo := repo.NewCustomerRepository(db)
+
+	// customer02, err := repo.FindFirstWithPreload(map[string]interface{}{
+	// 	"id": "001"},
+	// 	"UserCredential",
+	// )
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	// fmt.Println(customer02)
+
+	// c := customer02.(model.Customer)
+	// c.UserCredential.Password = "inirsama"
+	// err = repo.UpdateBy(&c)
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	//insert pake ada address
 
 	repo := repo.NewCustomerRepository(db)
 
-	customer02 := model.Customer{
-		Id: "001",
-	} //cari id
+	customer01 := model.Customer{
+		Id:             "002",
+		Name:           "Jandali Zanai",
+		Phone:          "0976666",
+		Email:          "jandali.zanai@gmail.com",
+		Balance:        210000,
+		UserCredential: model.UserCredential{UserName: "Jandas", Password: "janzz"},
 
-	customer02, err1 := repo.FindById(customer02.Id) //ambil data dari find by id
-
-	if err1 != nil {
-		log.Println(err1.Error())
+		// Address: []model.Address{
+		// 	{
+		// 		StreetName: "JL Nin Aja",
+		// 		City:       "Jakarta",
+		// 		PostalCode: "123",
+		// 	},
+		// 	{
+		// 		StreetName: "JL Braga",
+		// 		City:       "Bandung",
+		// 		PostalCode: "235",
+		// 	},
+		// },
 	}
 
-	fmt.Println("Ini Customer02")
-	fmt.Println(customer02)
+	err := repo.Create(&customer01)
+	utils.IsError(err)
 
-	userCredential01 := model.UserCredential{
-		UserName: "bukitbulan",
-		Password: "pasbulan",
-	} //masukin apa yang mau diupdate
+	//tampilin json
 
-	customer02.UserCredential = userCredential01
-	err2 := repo.UpdateBy(&customer02)
+	// repo := repo.NewCustomerRepository(db)
+	// customer02, err := repo.FindFirstWithPreload{
+	// 	map[string]interface{}{"id": "001"},
+	// 	"Address",
+	// }
 
-	if err2 != nil {
-		log.Println(err2.Error())
-	}
+	// repo := repo.NewCustomerRepository(db)
 
-	//nambain findbyid
+	// customer02, err := repo.FindFirstWithPreload(map[string]interface{}{
+	// 	"id": "001"},
+	// 	"Address",
+	// )
+
+	// utils.IsError(err)
+	// log.Println(customer02.ToString())
 
 }
