@@ -10,10 +10,14 @@ import (
 
 type CustomerRepository interface {
 	Create(customer *model.Customer) error
-	UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error
-	//pake map
+	// UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error
+	// //pake map
 
-	UpdatePakeStruct(customer *model.Customer, by model.Customer) error //pake struct
+	// UpdatePakeStruct(customer *model.Customer, by model.Customer) error //pake struct
+
+	//update dibawah, bisa keupdate di dua tabel
+
+	UpdateBy(existingCustomer *model.Customer) error
 
 	Delete(customer *model.Customer) error
 
@@ -199,20 +203,27 @@ func (c *customerRepository) Delete(customer *model.Customer) error {
 	return result
 }
 
-func (c *customerRepository) UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error {
+// func (c *customerRepository) UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error {
 
-	result := c.db.Model(customer).Updates(by).Error
+// 	result := c.db.Model(customer).Updates(by).Error
+// 	return result
+
+// }
+
+// func (c *customerRepository) UpdatePakeStruct(customer *model.Customer, by model.Customer) error {
+// 	result := c.db.Model(customer).Updates(by)
+
+// 	if err := result.Error; err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
+
+func (c *customerRepository) UpdateBy(existingCustomer *model.Customer) error {
+	result := c.db.Session(&gorm.Session{FullSaveAssociations: true}).Save(existingCustomer).Error
+
 	return result
 
-}
-
-func (c *customerRepository) UpdatePakeStruct(customer *model.Customer, by model.Customer) error {
-	result := c.db.Model(customer).Updates(by)
-
-	if err := result.Error; err != nil {
-		return err
-	}
-	return nil
 }
 
 func (c *customerRepository) Create(customer *model.Customer) error {
