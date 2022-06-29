@@ -12,7 +12,8 @@ type Customer struct {
 	IsStatus         int `gorm:"default:1"` //jangan pake bool, pake int
 	UserCredentialID uint
 	UserCredential   UserCredential
-	BaseModel        BaseModel `gorm:"embedded"`
+
+	BaseModel BaseModel `gorm:"embedded"`
 }
 
 func (Customer) TableName() string {
