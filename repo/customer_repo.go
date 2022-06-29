@@ -34,9 +34,7 @@ type CustomerRepository interface {
 	BaseRepositoryAggregation
 	BaseRepositoryPaging
 
-	//tambain authentication
-
-	// AuthCheck(db *gorm.DB, req *model.UserCredential) error
+	AuthCheck
 }
 
 type customerRepository struct {
@@ -45,9 +43,17 @@ type customerRepository struct {
 
 //nambain login auth
 
+func (c *customerRepository) AuthLogin(checkLogin *model.Customer) error {
+
+	result := c.db.Session(&gorm.Session{FullSaveAssociations: true}).Save(checkLogin).Error
+
+	return result
+
+}
+
 // func (c *customerRepository) AuthCheck(db *gorm.DB, req *model.UserCredential) error {
 
-// 	user, err := c.db.Model(&model.UserCredential)
+// 	// user, err := c.db.Model(&model.UserCredential)
 
 // }
 

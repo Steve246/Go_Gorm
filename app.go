@@ -1,7 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"go_gorm/config"
+	"go_gorm/model"
+	"go_gorm/repo"
+	"log"
 )
 
 func main() {
@@ -99,18 +103,18 @@ func main() {
 	// 	Balance:        210000,
 	// 	UserCredential: model.UserCredential{UserName: "Jandas", Password: "janzz"},
 
-	// Address: []model.Address{
-	// 	{
-	// 		StreetName: "JL Nin Aja",
-	// 		City:       "Jakarta",
-	// 		PostalCode: "123",
+	// 	Address: []model.Address{
+	// 		{
+	// 			StreetName: "JL Nin Aja",
+	// 			City:       "Jakarta",
+	// 			PostalCode: "123",
+	// 		},
+	// 		{
+	// 			StreetName: "JL Braga",
+	// 			City:       "Bandung",
+	// 			PostalCode: "235",
+	// 		},
 	// 	},
-	// 	{
-	// 		StreetName: "JL Braga",
-	// 		City:       "Bandung",
-	// 		PostalCode: "235",
-	// 	},
-	// },
 	// }
 
 	// err := repo.Create(&customer01)
@@ -129,27 +133,28 @@ func main() {
 
 	// log.Println(customer02.ToString())
 
-	//Auth Login Check+
+	//Auth Login Check -
+	// /1. buatlah sebuah usecase authentication login, apabila success balikan informasi customer ==> (authentication_usecase.go)
 
-	// repo := repo.NewCustomerRepository(db)
+	repo := repo.NewCustomerRepository(db)
 
-	// customer02, err1 := repo.FindFirstWithPreload(map[string]interface{}{
-	// 	"id": "001"},
-	// 	"UserCredential",
-	// )
+	customer02, err1 := repo.FindFirstWithPreload(map[string]interface{}{
+		"id": "001"},
+		"UserCredential",
+	)
 
-	// if err1 != nil {
-	// 	log.Println(err1.Error())
-	// }
+	if err1 != nil {
+		log.Println(err1.Error())
+	}
 
-	// fmt.Println(customer02)
+	fmt.Println(customer02)
 
-	// c := customer02.(model.Customer)
-	// c.UserCredential.Password = "inirsama"
-	// err = repo.UpdateBy(&c)
+	c := customer02.(model.Customer)
+	c.UserCredential.Password = "pass"
+	err := repo.AuthLogin(&c)
 
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// }
+	if err != nil {
+		log.Println(err.Error())
+	}
 
 }
