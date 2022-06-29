@@ -209,6 +209,32 @@ func main() {
 
 	// fmt.Println("Jumlah Customer: ", count)
 
+	//Count pake interface
+
+	repo := repo.NewCustomerRepository(db)
+
+	var TotalCustomerStatus []struct {
+		Name     string
+		IsStatus int
+		Total    int64
+	}
+	err := repo.Count(&TotalCustomerStatus, "is_status")
+
+	if err != nil {
+		log.Println(err.Error())
+	}
+	fmt.Println("Total Customer")
+	fmt.Println(TotalCustomerStatus)
+
+	var total int64
+	err = repo.Count(&total, "")
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	fmt.Println("Result for total")
+	fmt.Println(total)
+
 	// Group By
 
 	// var Result []struct {
@@ -241,15 +267,15 @@ func main() {
 
 	// Paging
 
-	repo := repo.NewCustomerRepository(db)
+	// repo := repo.NewCustomerRepository(db)
 
-	customerPaging, err := repo.Paging(1, 2)
+	// customerPaging, err := repo.Paging(1, 2)
 
-	if err != nil {
-		log.Println(err.Error())
-	}
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
 
-	fmt.Println("result for customerPaging")
-	fmt.Println(customerPaging)
+	// fmt.Println("result for customerPaging")
+	// fmt.Println(customerPaging)
 
 }

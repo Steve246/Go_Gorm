@@ -2,6 +2,7 @@ package repo
 
 import (
 	"errors"
+	"fmt"
 	"go_gorm/model"
 
 	"gorm.io/gorm"
@@ -46,25 +47,53 @@ type customerRepository struct {
 // 	return total, nil
 // }
 
-//count diubah jadi dibawah
+//count diubah jadi dibawah biar ada opsi
 
-func (c *customerRepository) Count(groupBy string) (int64, error) {
-	var total int64
-	var result *gorm.DB
+// func (c *customerRepository) Count(groupBy string) (int64, error) {
+// 	var total int64
+// 	var result *gorm.DB
+
+// 	sqlStmt := c.db.Model(&model.Customer{}).Unscoped()
+
+// 	if groupBy == "" {
+// 		result = sqlStmt.Count(&total)
+// 	} else {
+// 		result = sqlStmt.Select("count(*)").Group(groupBy).First(&total)
+
+// 	}
+
+// 	if err := result.Error; err != nil {
+// 		return 0, err
+// 	}
+// 	return total, nil
+
+// }
+
+//diubah lagi jadi bawah
+
+func (c *customerRepository) Count(result interface{}, groupBy string) error {
+
+	var res *gorm.DB
 
 	sqlStmt := c.db.Model(&model.Customer{}).Unscoped()
 
 	if groupBy == "" {
-		result = sqlStmt.Count(&total)
+		t, ok := result.(*int64)
+
+		if ok {
+			res = sqlStmt.Count(t)
+		} else {
+			return errors.New("must be int64")
+		}
+
 	} else {
-		result = sqlStmt.Select("count(*)").Group(groupBy).First(&total)
-
+		res = sqlStmt.Select(fmt.Sprintf("%s, %s", groupBy, "count(*) as total")).Group(groupBy).Find(result)
+	}
+	if err := res.Error; err != nil {
+		return err
 	}
 
-	if err := result.Error; err != nil {
-		return 0, err
-	}
-	return total, nil
+	return nil
 
 }
 
