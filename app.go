@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"go_gorm/config"
+	"go_gorm/repo"
+	"log"
 )
 
 func main() {
@@ -192,5 +195,61 @@ func main() {
 	// fmt.Println("Find By:", customers01)
 
 	//count
+
+	// repo := repo.NewCustomerRepository(db)
+
+	// count, err := repo.Count("id")
+
+	// nul ("") --> return semua id unik
+	// id --> return 1 , karena cma ad 1 id unik. Dan dilimit cma 1
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	// fmt.Println("Jumlah Customer: ", count)
+
+	// Group By
+
+	// var Result []struct {
+	// 	IsStatus int
+	// 	Total    int64
+	// }
+
+	// repo := repo.NewCustomerRepository(db)
+
+	// err := repo.GroupBy(&Result, "is_status, count(is_status) as total", nil, "is_status")
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	// fmt.Println("Result for GroupBy is_status: ", Result)
+
+	// var Result2 []struct {
+	// 	IsStatus int
+	// 	Total    int64
+	// }
+
+	// err2 := repo.GroupBy(&Result2, "address, count(address) as total", nil, "address")
+
+	// if err2 != nil {
+	// 	log.Println(err2.Error())
+	// }
+
+	// fmt.Println("Result for GroupBy Address: ", Result2)
+
+	// Paging
+
+	repo := repo.NewCustomerRepository(db)
+
+	customerPaging, err := repo.Paging(1, 2)
+
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	fmt.Println("result for customerPaging")
+	fmt.Println(customerPaging)
 
 }

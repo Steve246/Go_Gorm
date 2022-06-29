@@ -22,6 +22,10 @@ type CustomerRepository interface {
 	FindFirstBy(by map[string]interface{}) (model.Customer, error)
 	FindAllBy(by map[string]interface{}) ([]model.Customer, error)
 	FindBy(by string, vals ...interface{}) ([]model.Customer, error)
+
+	//tambain aggregate
+	BaseRepositoryAggregation
+	BaseRepositoryPaging
 }
 
 type customerRepository struct {
@@ -30,14 +34,38 @@ type customerRepository struct {
 
 //nambain count, group by, and paging
 
-func (c *customerRepository) Count(groupBy string) (int, error) {
-	var total int
-	result := c.db.Model(&model.Customer{}).Select("Count(*)").Group(groupBy).First(&total)
+// func (c *customerRepository) Count(groupBy string) (int, error) {
+// 	var total int
+// 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("Count(*)").Group(groupBy).First(&total)
+
+// 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("count(*)").Find(&total) //bisa return banyak id di dalam
+
+// 	if err := result.Error; err != nil {
+// 		return 0, err
+// 	}
+// 	return total, nil
+// }
+
+//count diubah jadi dibawah
+
+func (c *customerRepository) Count(groupBy string) (int64, error) {
+	var total int64
+	var result *gorm.DB
+
+	sqlStmt := c.db.Model(&model.Customer{}).Unscoped()
+
+	if groupBy == "" {
+		result = sqlStmt.Count(&total)
+	} else {
+		result = sqlStmt.Select("count(*)").Group(groupBy).First(&total)
+
+	}
 
 	if err := result.Error; err != nil {
 		return 0, err
 	}
 	return total, nil
+
 }
 
 func (c *customerRepository) GroupBy(result interface{}, selectedBy string, whereBy map[string]interface{}, groupBy string) error {

@@ -1,7 +1,7 @@
 package repo
 
 type BaseRepositoryAggregation interface {
-	Count(groupBy string) (int, error)
+	Count(groupBy string) (int64, error)
 	GroupBy(result interface{}, selecedBy string, whereBy map[string]interface{}, groupBy string) error
 }
 
