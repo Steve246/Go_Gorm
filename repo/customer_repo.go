@@ -33,11 +33,23 @@ type CustomerRepository interface {
 	//tambain aggregate
 	BaseRepositoryAggregation
 	BaseRepositoryPaging
+
+	//tambain authentication
+
+	// AuthCheck(db *gorm.DB, req *model.UserCredential) error
 }
 
 type customerRepository struct {
 	db *gorm.DB
 }
+
+//nambain login auth
+
+// func (c *customerRepository) AuthCheck(db *gorm.DB, req *model.UserCredential) error {
+
+// 	user, err := c.db.Model(&model.UserCredential)
+
+// }
 
 //nambain count, group by, and paging
 
