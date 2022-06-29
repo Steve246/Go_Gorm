@@ -43,11 +43,20 @@ type customerRepository struct {
 
 //nambain login auth
 
-func (c *customerRepository) AuthLogin(checkLogin *model.Customer) error {
+func (c *customerRepository) AuthLogin(name string, password string) (model.UserCredential, error) {
 
-	result := c.db.Session(&gorm.Session{FullSaveAssociations: true}).Save(checkLogin).Error
+	var temp model.UserCredential
 
-	return result
+	if resultName := c.db.Where("user_name = ?", name).First(&temp); resultName.Error != nil {
+		return temp, resultName.Error
+	}
+
+	if resultPassword := c.db.Where("password = ?", password).First(&temp); resultPassword.Error != nil {
+		return temp, resultPassword.Error
+
+	}
+
+	return temp, nil
 
 }
 
