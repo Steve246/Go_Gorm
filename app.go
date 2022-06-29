@@ -129,6 +129,27 @@ func main() {
 
 	// log.Println(customer02.ToString())
 
-	//Challenge - 1
+	//Auth Login Check+
+
+	// repo := repo.NewCustomerRepository(db)
+
+	// customer02, err1 := repo.FindFirstWithPreload(map[string]interface{}{
+	// 	"id": "001"},
+	// 	"UserCredential",
+	// )
+
+	// if err1 != nil {
+	// 	log.Println(err1.Error())
+	// }
+
+	// fmt.Println(customer02)
+
+	// c := customer02.(model.Customer)
+	// c.UserCredential.Password = "inirsama"
+	// err = repo.UpdateBy(&c)
+
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
 
 }
