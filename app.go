@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"go_gorm/config"
-	"go_gorm/model"
 	"go_gorm/repo"
+	"go_gorm/utils"
 	"log"
 )
 
@@ -133,28 +132,20 @@ func main() {
 
 	// log.Println(customer02.ToString())
 
-	//Auth Login Check -
-	// /1. buatlah sebuah usecase authentication login, apabila success balikan informasi customer ==> (authentication_usecase.go)
+	//Auth Login Check
+	// 1. buatlah sebuah usecase authentication login,
+	//apabila success balikan informasi customer ==> (authentication_usecase.go)
 
 	repo := repo.NewCustomerRepository(db)
 
-	customer02, err1 := repo.FindFirstWithPreload(map[string]interface{}{
-		"id": "001"},
-		"UserCredential",
-	)
+	authCheck, err := repo.AuthLogin("fadZong", "pass")
 
-	if err1 != nil {
-		log.Println(err1.Error())
-	}
+	utils.IsError(err)
 
-	fmt.Println(customer02)
+	log.Println(authCheck)
 
-	c := customer02.(model.Customer)
-	c.UserCredential.Password = "pass"
-	err := repo.AuthLogin(&c)
+	// log.Println(authCheck.ToString()) --> error di to string
 
-	if err != nil {
-		log.Println(err.Error())
-	}
+	//buatlah sebuah usecase member registration dari existing customer yang ada, dengan menambahkan table customer sebuah field isMember (y/n) ==> (member_activation_usecase.go)
 
 }
