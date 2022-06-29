@@ -2,9 +2,9 @@ package main
 
 import (
 	"go_gorm/config"
+	"go_gorm/model"
 	"go_gorm/repo"
 	"go_gorm/utils"
-	"log"
 )
 
 func main() {
@@ -136,16 +136,51 @@ func main() {
 	// 1. buatlah sebuah usecase authentication login,
 	//apabila success balikan informasi customer ==> (authentication_usecase.go)
 
-	repo := repo.NewCustomerRepository(db)
+	// repo := repo.NewCustomerRepository(db)
 
-	authCheck, err := repo.AuthLogin("fadZong", "pass")
+	// authCheck, err := repo.AuthLogin("fadZong", "pass")
 
-	utils.IsError(err)
+	// utils.IsError(err)
 
-	log.Println(authCheck)
+	// log.Println(authCheck)
 
 	// log.Println(authCheck.ToString()) --> error di to string
 
 	//buatlah sebuah usecase member registration dari existing customer yang ada, dengan menambahkan table customer sebuah field isMember (y/n) ==> (member_activation_usecase.go)
+
+	//has many customer product add
+
+	repo := repo.NewCustomerProductRepository(db)
+
+	product01 := model.Product{
+		ProductName: "Kacang Manis",
+		Customer:    nil,
+	}
+	err := repo.Create(&product01)
+	utils.IsError(err)
+
+	customer01 := model.Customer{
+		Id:   "001",
+		Name: "Bulan Menerangi",
+		Address: []model.Address{
+			{
+				StreetName: "JL Jalan Aja",
+				City:       "Ragunan",
+				PostalCode: "12345",
+			},
+		},
+		Phone:   "102030",
+		Email:   "bulan.matahari@gmail.com",
+		Balance: 10000,
+		UserCredential: model.UserCredential{
+			UserName: "bulanbulan",
+			Password: "hahaihi",
+		},
+	}
+
+	// customerRepo := repo.NewCustomerProductRepository(db)
+
+	err = repo.Create(&customer01)
+	utils.IsError(err)
 
 }
