@@ -2,9 +2,6 @@ package main
 
 import (
 	"go_gorm/config"
-	"go_gorm/model"
-	"go_gorm/repo"
-	"go_gorm/utils"
 )
 
 func main() {
@@ -92,40 +89,34 @@ func main() {
 
 	//insert pake ada address
 
-	repo := repo.NewCustomerRepository(db)
+	// repo := repo.NewCustomerRepository(db)
 
-	customer01 := model.Customer{
-		Id:             "002",
-		Name:           "Jandali Zanai",
-		Phone:          "0976666",
-		Email:          "jandali.zanai@gmail.com",
-		Balance:        210000,
-		UserCredential: model.UserCredential{UserName: "Jandas", Password: "janzz"},
+	// customer01 := model.Customer{
+	// 	Id:             "002",
+	// 	Name:           "Jandali Zanai",
+	// 	Phone:          "0976666",
+	// 	Email:          "jandali.zanai@gmail.com",
+	// 	Balance:        210000,
+	// 	UserCredential: model.UserCredential{UserName: "Jandas", Password: "janzz"},
 
-		// Address: []model.Address{
-		// 	{
-		// 		StreetName: "JL Nin Aja",
-		// 		City:       "Jakarta",
-		// 		PostalCode: "123",
-		// 	},
-		// 	{
-		// 		StreetName: "JL Braga",
-		// 		City:       "Bandung",
-		// 		PostalCode: "235",
-		// 	},
-		// },
-	}
+	// Address: []model.Address{
+	// 	{
+	// 		StreetName: "JL Nin Aja",
+	// 		City:       "Jakarta",
+	// 		PostalCode: "123",
+	// 	},
+	// 	{
+	// 		StreetName: "JL Braga",
+	// 		City:       "Bandung",
+	// 		PostalCode: "235",
+	// 	},
+	// },
+	// }
 
-	err := repo.Create(&customer01)
-	utils.IsError(err)
+	// err := repo.Create(&customer01)
+	// utils.IsError(err)
 
 	//tampilin json
-
-	// repo := repo.NewCustomerRepository(db)
-	// customer02, err := repo.FindFirstWithPreload{
-	// 	map[string]interface{}{"id": "001"},
-	// 	"Address",
-	// }
 
 	// repo := repo.NewCustomerRepository(db)
 
@@ -135,6 +126,9 @@ func main() {
 	// )
 
 	// utils.IsError(err)
+
 	// log.Println(customer02.ToString())
+
+	//Challenge - 1
 
 }
