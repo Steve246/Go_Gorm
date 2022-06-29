@@ -17,12 +17,14 @@ type CustomerRepository interface {
 
 	//update dibawah, bisa keupdate di dua tabel
 
-	UpdateBy(existingCustomer *model.Customer) error
+	UpdateBy(existingCustomer *model.Customer) error //update pake relation
 
 	Delete(customer *model.Customer) error
 
-	FindById(id string) (model.Customer, error)
+	// FindById(id string) (model.Customer, error)
 	//tambain find by id
+
+	FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) //findby id dengan relation + preload
 
 	FindFirstBy(by map[string]interface{}) (model.Customer, error)
 	FindAllBy(by map[string]interface{}) ([]model.Customer, error)
@@ -177,9 +179,26 @@ func (c *customerRepository) FindAllBy(by map[string]interface{}) ([]model.Custo
 	return customer, nil
 }
 
-func (c *customerRepository) FindById(id string) (model.Customer, error) {
+// func (c *customerRepository) FindById(id string) (model.Customer, error) {
+// 	var customer model.Customer
+// 	result := c.db.Unscoped().First(&customer, "id = ?", id)
+
+// 	if err := result.Error; err != nil {
+// 		if errors.Is(err, gorm.ErrRecordNotFound) {
+// 			return customer, nil
+// 		} else {
+// 			return customer, err
+// 		}
+
+// 	}
+
+// 	return customer, nil
+// }
+
+func (c *customerRepository) FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) {
 	var customer model.Customer
-	result := c.db.Unscoped().First(&customer, "id = ?", id)
+
+	result := c.db.Preload(preload).Where(by).First(&customer)
 
 	if err := result.Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -191,6 +210,7 @@ func (c *customerRepository) FindById(id string) (model.Customer, error) {
 	}
 
 	return customer, nil
+
 }
 
 // func (c *customerRepository) Delete(id string) error {
