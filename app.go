@@ -2,6 +2,8 @@ package main
 
 import (
 	"go_gorm/config"
+	"go_gorm/model"
+	"go_gorm/repo"
 )
 
 func main() {
@@ -14,17 +16,23 @@ func main() {
 
 	defer config.DBTutup(enigmaDb)
 
-	// Paging
+	//sampe sini, pilih dlu opsi ENV, mau create table baru (migration) or dev
 
-	// repo := repo.NewCustomerRepository(db)
+	repo := repo.NewCustomerRepository(db)
 
-	// customerPaging, err := repo.Paging(1, 2)
+	customer01 := model.Customer{
+		Id:      "002",
+		Name:    "Sukiyaki Goreng",
+		Address: "Jakarta",
+		Balance: 20000,
+		UserCredential: model.UserCredential{
+			UserName: "sukisuki",
+			Password: "passbeda",
+		},
+		Email: "suki.enak@gmail.com",
+		Phone: "0817895432",
+	}
 
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// }
-
-	// fmt.Println("result for customerPaging")
-	// fmt.Println(customerPaging)
+	repo.Create(&customer01)
 
 }
