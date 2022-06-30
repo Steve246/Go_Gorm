@@ -35,10 +35,22 @@ type CustomerRepository interface {
 	BaseRepositoryPaging
 
 	AuthCheck
+
+	//tambain product many2many
+
+	OpenProductForExistingCustomer(customerWithProduct *model.Customer) error
 }
 
 type customerRepository struct {
 	db *gorm.DB
+}
+
+//nambain many2many
+
+func (c *customerRepository) OpenProductForExistingCustomer(customerWithProduct *model.Customer) error {
+	result := c.db.Model(&customerWithProduct).Updates(customerWithProduct).Error
+
+	return result
 }
 
 //nambain login auth

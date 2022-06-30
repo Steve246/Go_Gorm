@@ -1,6 +1,10 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"encoding/json"
+
+	"gorm.io/gorm"
+)
 
 type Product struct {
 	gorm.Model
@@ -10,4 +14,12 @@ type Product struct {
 
 func (p Product) TableName() string {
 	return "mst_products"
+}
+
+func (p *Product) ToString() string {
+	product, err := json.MarshalIndent(p, "", "  ")
+	if err != nil {
+		return ""
+	}
+	return string(product)
 }

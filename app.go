@@ -4,7 +4,6 @@ import (
 	"go_gorm/config"
 	"go_gorm/model"
 	"go_gorm/repo"
-
 	"go_gorm/utils"
 )
 
@@ -151,14 +150,22 @@ func main() {
 
 	//many to many
 
-	repo := repo.NewCustomerProductRepository(db)
+	//Case 1 membuat customer baru sekaligus produk baru
+
+	//repo khusus produk
+
+	customerRepo := repo.NewCustomerProductRepository(db)
 
 	product01 := model.Product{
 		ProductName: "Kacang Manis",
 		Customer:    nil,
 	}
-	err := repo.Create(&product01)
+	err := customerRepo.Create(&product01)
 	utils.IsError(err)
+
+	//bikin repo customer
+
+	repo := repo.NewCustomerRepository(db)
 
 	customer01 := model.Customer{
 		Id:   "001",
@@ -177,11 +184,18 @@ func main() {
 			UserName: "bulanbulan",
 			Password: "hahaihi",
 		},
+
+		Products: []*model.Product{
+			{
+				ProductName: "Caca Marina",
+			},
+			{
+				ProductName: "Beng Beng",
+			},
+		},
 	}
 
-	// customerRepo := repo.NewCustomerProductRepository(db)
-
-	err = repo.AuthLogin(&customer01)
+	err = repo.Create(&customer01)
 	utils.IsError(err)
 
 }
