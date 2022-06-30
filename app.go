@@ -4,6 +4,7 @@ import (
 	"go_gorm/config"
 	"go_gorm/model"
 	"go_gorm/repo"
+
 	"go_gorm/utils"
 )
 
@@ -180,7 +181,7 @@ func main() {
 
 	// customerRepo := repo.NewCustomerProductRepository(db)
 
-	err = repo.Create(&customer01)
+	err = repo.AuthLogin(&customer01)
 	utils.IsError(err)
 
 }
