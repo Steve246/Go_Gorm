@@ -50,7 +50,9 @@ type CustomerRepository interface {
 	UpdateAsociation(assocModel *model.Customer, assocName string, assocDelValue interface{}) error
 
 	//namain count
-	CountTotal
+	// CountTotal
+
+	FindAllProducts(by string) ([]model.Customer, error)
 }
 
 type customerRepository struct {
@@ -58,26 +60,34 @@ type customerRepository struct {
 }
 
 //nambain count
-func (c *customerRepository) CountColumn(cust *model.Customer, column string) int64 {
+// func (c *customerRepository) CountColumn(cust *model.Customer, column string) int64 {
 
-	result := c.db.Model(&model.Customer{}).Where("code IN ?", cust).Association(column).Count()
+// 	result := c.db.Model(&model.Customer{}).Where("code IN ?", cust).Association(column).Count()
 
-	return result
+// 	return result
 
-	//db.Model(&user).Where("code IN ?", codes).Association("Languages").Count()
+// 	//db.Model(&user).Where("code IN ?", codes).Association("Languages").Count()
 
-}
+// }
 
-// func (c *customerRepository) Count(groupBy string) (int, error) {
-// 	var total int
-// 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("Count(*)").Group(groupBy).First(&total)
+// func (c *customerProductRepo) CountColumn(result interface{}, groupBy string) (*gorm.DB, error) {
+// 	var res *gorm.DB
 
-// 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("count(*)").Find(&total) //bisa return banyak id di dalam
+// 	sqlStmt := c.db.Model(&model.Customer{}).Unscoped()
 
-// 	if err := result.Error; err != nil {
-// 		return 0, err
+// 	// 	select customer_id, count(product_id) as totalProduk
+// 	// from customer_products
+// 	// group by customer_id
+// 	// order by customer_id
+
+// 	res = sqlStmt.Select("customer_id as idCustomer, count(product_id) as total").Group(groupBy).Association("Products").Find(result)
+
+// 	if err := res.Error; err != nil {
+// 		return err, nil
 // 	}
-// 	return total, nil
+
+// 	return res, err
+
 // }
 
 //nambain assoc
@@ -258,6 +268,20 @@ func (c *customerRepository) FindBy(by string, vals ...interface{}) ([]model.Cus
 }
 
 func (c *customerRepository) FindAllBy(by map[string]interface{}) ([]model.Customer, error) {
+	var customer []model.Customer
+	result := c.db.Unscoped().Where(by).Find(&customer)
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return customer, nil
+		} else {
+			return customer, err
+		}
+	}
+
+	return customer, nil
+}
+
+func (c *customerRepository) FindAllProducts(by string) ([]model.Customer, error) {
 	var customer []model.Customer
 	result := c.db.Unscoped().Where(by).Find(&customer)
 	if err := result.Error; err != nil {

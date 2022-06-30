@@ -1,7 +1,7 @@
 package repo
 
-import "go_gorm/model"
+import "gorm.io/gorm"
 
 type CountTotal interface {
-	CountColumn(cust *model.Customer, column string) int64
+	CountColumn(result interface{}, groupBy string) (*gorm.DB, error)
 }
