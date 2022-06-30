@@ -201,22 +201,83 @@ func main() {
 	//Case 2
 	//Menambahkan product baru ke customer yang sudah terdafar
 
+	// customerRepo := repo.NewCustomerRepository(db)
+
+	// cust, err := customerRepo.FindById("001")
+	// utils.IsError(err)
+
+	// cust.Products = []*model.Product{
+	// 	{
+	// 		ProductName: "Silver King",
+	// 	},
+	// 	{
+	// 		ProductName: "Keju Ale",
+	// 	},
+	// }
+
+	// err = customerRepo.UpdateByModel(&cust)
+
+	// utils.IsError(err)
+
+	//Case 3
+	//Juki (customer baru) pengen ada produk yang udh ada
+
+	// customerRepo := repo.NewCustomerRepository(db)
+
+	// productRepo := repo.NewCustomerProductRepository(db)
+
+	// findby id, tapi cari id dari sih produk bukan customer
+
+	// prod, err := productRepo.FindByIdProduct("001")
+	// utils.IsError(err)
+
+	// fmt.Println(prod.ToString())
+
+	// customer02 := model.Customer{
+	// 	Id:   "004",
+	// 	Name: "Am Mong",
+	// 	Address: []model.Address{
+	// 		{
+	// 			StreetName: "JL Kemana Aja",
+	// 			City:       "Jakarta",
+	// 			PostalCode: "12345",
+	// 		},
+	// 	},
+	// 	Phone:   "08765655",
+	// 	Email:   "am.mong@gmail.com",
+	// 	Balance: 20000,
+	// 	UserCredential: model.UserCredential{
+	// 		UserName: "cek_saldo",
+	// 		Password: "3455",
+	// 	},
+
+	// 	Products: []*model.Product{&prod},
+	// }
+
+	// err = customerRepo.Create(&customer02)
+	// utils.IsError(err)
+
+	//Case 4
+
+	//Menambahkan product dan customer (customer_with_product) yang keduanya sudah terdaftar
+
 	customerRepo := repo.NewCustomerRepository(db)
 
-	cust, err := customerRepo.FindById("001")
-	utils.IsError(err)
+	productRepo := repo.NewCustomerProductRepository(db)
 
-	cust.Products = []*model.Product{
-		{
-			ProductName: "Silver King",
-		},
-		{
-			ProductName: "Keju Ale",
-		},
-	}
+	cust, err1 := customerRepo.FindById("004")
 
-	err = customerRepo.UpdateByModel(&cust)
+	utils.IsError(err1)
 
-	utils.IsError(err)
+	prod, err2 := productRepo.FindByIdProduct("5")
+
+	utils.IsError(err2)
+
+	cust.Products = []*model.Product{&prod}
+
+	err3 := customerRepo.UpdateBy(&cust)
+	utils.IsError(err3)
+
+	//bisa pake ini juga cust.Products = append(cust.Products, &prod)
 
 }
