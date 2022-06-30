@@ -149,7 +149,7 @@ func main() {
 
 	//buatlah sebuah usecase member registration dari existing customer yang ada, dengan menambahkan table customer sebuah field isMember (y/n) ==> (member_activation_usecase.go)
 
-	//has many customer product add
+	//many to many
 
 	repo := repo.NewCustomerProductRepository(db)
 
