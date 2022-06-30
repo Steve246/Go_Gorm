@@ -24,7 +24,11 @@ type CustomerRepository interface {
 	FindById(id string) (model.Customer, error)
 	//tambain find by id
 
-	FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) //findby id dengan relation + preload
+	// FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error)
+	//findby id dengan relation + preload
+
+	//preload ganti return method customer --> tujuannya biar
+	FindFirstWithPreload(by map[string]interface{}, preload string) (model.Customer, error)
 
 	FindFirstBy(by map[string]interface{}) (model.Customer, error)
 	FindAllBy(by map[string]interface{}) ([]model.Customer, error)
@@ -39,10 +43,33 @@ type CustomerRepository interface {
 	//tambain product many2many
 
 	UpdateByModel(payload *model.Customer) error
+
+	//association
+	DeleteAsociation(assocModel *model.Customer, assocName string, assocDelValue interface{}) error
+
+	UpdateAsociation(assocModel *model.Customer, assocName string, assocDelValue interface{}) error
 }
 
 type customerRepository struct {
 	db *gorm.DB
+}
+
+//nambain assoc
+
+func (c *customerRepository) UpdateAsociation(assocModel *model.Customer, assocName string, assocDelValue interface{}) error {
+	err := c.db.Model(assocModel).Association(assocName).Replace(assocDelValue)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *customerRepository) DeleteAsociation(assocModel *model.Customer, assocName string, assocDelValue interface{}) error {
+	err := c.db.Model(assocModel).Association(assocName).Delete(assocDelValue)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 //nambain many2many
@@ -234,7 +261,7 @@ func (c *customerRepository) FindById(id string) (model.Customer, error) {
 	return customer, nil
 }
 
-func (c *customerRepository) FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) {
+func (c *customerRepository) FindFirstWithPreload(by map[string]interface{}, preload string) (model.Customer, error) {
 	var customer model.Customer
 
 	result := c.db.Preload(preload).Where(by).First(&customer)
