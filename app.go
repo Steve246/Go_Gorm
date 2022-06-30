@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"go_gorm/config"
 	"go_gorm/model"
 	"go_gorm/repo"
@@ -261,27 +262,104 @@ func main() {
 
 	//Menambahkan product dan customer (customer_with_product) yang keduanya sudah terdaftar
 
-	customerRepo := repo.NewCustomerRepository(db)
+	// customerRepo := repo.NewCustomerRepository(db)
 
-	productRepo := repo.NewCustomerProductRepository(db)
+	// productRepo := repo.NewCustomerProductRepository(db)
 
-	cust, err1 := customerRepo.FindById("004")
+	// cust, err1 := customerRepo.FindById("004")
 
-	utils.IsError(err1)
+	// utils.IsError(err1)
 
-	prod, err2 := productRepo.FindByIdProduct("5")
+	// prod, err2 := productRepo.FindByIdProduct("5")
 
-	utils.IsError(err2)
+	// utils.IsError(err2)
 
-	cust.Products = []*model.Product{&prod}
+	// cust.Products = []*model.Product{&prod}
 
-	err3 := customerRepo.UpdateBy(&cust)
+	// err3 := customerRepo.UpdateBy(&cust)
 	//bisa pake ini juga cust.Products = append(cust.Products, &prod)
 
-	utils.IsError(err3)
+	// utils.IsError(err3)
 
 	//Case 5
 
-	//
+	// Delete Pake Association
+
+	//existing customer ingin menghapus produk relasinya
+
+	// customerRepo := repo.NewCustomerRepository(db)
+
+	// productRepo := repo.NewCustomerProductRepository(db)
+
+	// cust, err1 := customerRepo.FindById("002")
+
+	// utils.IsError(err1)
+
+	// prod, err2 := productRepo.FindByIdProduct("1")
+
+	// utils.IsError(err2)
+
+	// err := customerRepo.DeleteAsociation(&cust, "Products", &prod)
+
+	// utils.IsError(err)
+
+	//hapus customer user credential
+
+	// customerRepo := repo.NewCustomerRepository(db)
+
+	// cus2, err3 := customerRepo.FindById("002")
+
+	// utils.IsError(err3)
+
+	// userCus2, err4 := customerRepo.FindFirstWithPreload(map[string]interface{}{
+	// 	"id": "002"},
+	// 	"UserCredential",
+	// ) //cari user credential id 2
+
+	// fmt.Println(userCus2)
+
+	// ToString()
+
+	// utils.IsError(err4)
+
+	// err := customerRepo.DeleteAsociation(&cus2, "UserCredential", &userCus2)
+
+	// utils.IsError(err)
+
+	//Case 5
+	//Update pake assosiasi
+	// Existing customer ingin update produk relasinya
+
+	customerRepo := repo.NewCustomerRepository(db)
+
+	cust, err1 := customerRepo.FindFirstWithPreload(map[string]interface{}{
+		"id": "002"},
+		"Products",
+	)
+
+	utils.IsError(err1)
+
+	productRepo := repo.NewCustomerProductRepository(db)
+
+	newProduct, err2 := productRepo.FindByIdProduct("4")
+	fmt.Println(newProduct.ToString())
+
+	utils.IsError(err2)
+
+	var oldProductId uint = 1 //id 1 dibuang
+	var newProducttSlice []model.Product
+
+	for _, prod := range cust.Products {
+		if (*prod).ID != oldProductId {
+			newProducttSlice = append(newProducttSlice, *prod)
+		} //id yg diset dibuang, dan append dengan id baru
+	}
+	fmt.Println("newProductSlice01: ", newProducttSlice)
+	newProducttSlice = append(newProducttSlice, newProduct)
+	fmt.Println("newProductSlice02: ", newProducttSlice)
+
+	err := customerRepo.UpdateAsociation(&cust, "Products", newProducttSlice)
+
+	utils.IsError(err)
 
 }
