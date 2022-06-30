@@ -341,7 +341,7 @@ func main() {
 
 	productRepo := repo.NewCustomerProductRepository(db)
 
-	newProduct, err2 := productRepo.FindByIdProduct("4")
+	newProduct, err2 := productRepo.FindByIdProduct("1")
 	fmt.Println(newProduct.ToString())
 
 	utils.IsError(err2)
@@ -361,5 +361,8 @@ func main() {
 	err := customerRepo.UpdateAsociation(&cust, "Products", newProducttSlice)
 
 	utils.IsError(err)
+
+	//latihan 1
+	// Buatlah program untuk menghitung total product masing-masing customer
 
 }
