@@ -1,10 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"go_gorm/config"
-	"go_gorm/repo"
-	"go_gorm/utils"
 )
 
 func main() {
@@ -360,73 +357,5 @@ func main() {
 	// err := customerRepo.UpdateAsociation(&cust, "Products", newProducttSlice)
 
 	// utils.IsError(err)
-
-	//latihan 1
-	// Buatlah program untuk menghitung total product masing-masing customer
-	//001 -> 2
-	//001 -> 3
-
-	customerRepo := repo.NewCustomerRepository(db)
-
-	cust, err1 := customerRepo.FindAllProducts("Products")
-
-	fmt.Println(cust)
-
-	utils.IsError(err1)
-
-	// var TotalProductId []struct {
-	// 	customerId     string
-	// 	TotalProductId int64
-	// }
-
-	// err := customerRepo.Count(&TotalProductId, "customer_id")
-
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// }
-	// fmt.Println("Total ProductId")
-	// fmt.Println(TotalProductId)
-
-	//
-
-	// db.Model(&user).Association("Languages").Count()
-
-	// codes := []string{"zh-CN", "en-US", "ja-JP"}
-	// db.Model(&user).Where("code IN ?", codes).Association("Languages").Count()
-
-	//
-
-	// total := customerRepo.CountColumn(&model.Customer{}, "Products")
-	// fmt.Println(total)
-
-	// fmt.Println("Total Customer Id")
-	// fmt.Println(TotalCustomerStatus)
-
-	//Count pake interface
-
-	// repo := repo.NewCustomerRepository(db)
-
-	// var TotalCustomerStatus []struct {
-	// 	Name     string
-	// 	IsStatus int
-	// 	Total    int64
-	// }
-
-	// err := repo.Count(&TotalCustomerStatus, "is_status")
-
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// }
-	// fmt.Println("Total Customer")
-	// fmt.Println(TotalCustomerStatus)
-
-	// var total int64
-	// err = repo.Count(&total, "")
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// }
-
-	// fmt.Println("Result for total")
-	// fmt.Println(total)
 
 }
