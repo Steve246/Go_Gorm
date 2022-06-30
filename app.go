@@ -276,8 +276,12 @@ func main() {
 	cust.Products = []*model.Product{&prod}
 
 	err3 := customerRepo.UpdateBy(&cust)
+	//bisa pake ini juga cust.Products = append(cust.Products, &prod)
+
 	utils.IsError(err3)
 
-	//bisa pake ini juga cust.Products = append(cust.Products, &prod)
+	//Case 5
+
+	//
 
 }
