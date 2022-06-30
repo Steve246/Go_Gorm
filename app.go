@@ -5,7 +5,6 @@ import (
 	"go_gorm/config"
 	"go_gorm/model"
 	"go_gorm/repo"
-	"go_gorm/utils"
 )
 
 func main() {
@@ -330,39 +329,45 @@ func main() {
 	//Update pake assosiasi
 	// Existing customer ingin update produk relasinya
 
-	customerRepo := repo.NewCustomerRepository(db)
+	// customerRepo := repo.NewCustomerRepository(db)
 
-	cust, err1 := customerRepo.FindFirstWithPreload(map[string]interface{}{
-		"id": "002"},
-		"Products",
-	)
+	// cust, err1 := customerRepo.FindFirstWithPreload(map[string]interface{}{
+	// 	"id": "002"},
+	// 	"Products",
+	// )
 
-	utils.IsError(err1)
+	// utils.IsError(err1)
 
-	productRepo := repo.NewCustomerProductRepository(db)
+	// productRepo := repo.NewCustomerProductRepository(db)
 
-	newProduct, err2 := productRepo.FindByIdProduct("1")
-	fmt.Println(newProduct.ToString())
+	// newProduct, err2 := productRepo.FindByIdProduct("1")
+	// fmt.Println(newProduct.ToString())
 
-	utils.IsError(err2)
+	// utils.IsError(err2)
 
-	var oldProductId uint = 1 //id 1 dibuang
-	var newProducttSlice []model.Product
+	// var oldProductId uint = 1 //id 1 dibuang
+	// var newProducttSlice []model.Product
 
-	for _, prod := range cust.Products {
-		if (*prod).ID != oldProductId {
-			newProducttSlice = append(newProducttSlice, *prod)
-		} //id yg diset dibuang, dan append dengan id baru
-	}
-	fmt.Println("newProductSlice01: ", newProducttSlice)
-	newProducttSlice = append(newProducttSlice, newProduct)
-	fmt.Println("newProductSlice02: ", newProducttSlice)
+	// for _, prod := range cust.Products {
+	// 	if (*prod).ID != oldProductId {
+	// 		newProducttSlice = append(newProducttSlice, *prod)
+	// 	} //id yg diset dibuang, dan append dengan id baru
+	// }
+	// fmt.Println("newProductSlice01: ", newProducttSlice)
+	// newProducttSlice = append(newProducttSlice, newProduct)
+	// fmt.Println("newProductSlice02: ", newProducttSlice)
 
-	err := customerRepo.UpdateAsociation(&cust, "Products", newProducttSlice)
+	// err := customerRepo.UpdateAsociation(&cust, "Products", newProducttSlice)
 
-	utils.IsError(err)
+	// utils.IsError(err)
 
 	//latihan 1
 	// Buatlah program untuk menghitung total product masing-masing customer
+
+	customerRepo := repo.NewCustomerRepository(db)
+
+	total := customerRepo.CountColumn(&model.Customer, "Products")
+
+	fmt.Println(total)
 
 }

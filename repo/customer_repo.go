@@ -48,11 +48,37 @@ type CustomerRepository interface {
 	DeleteAsociation(assocModel *model.Customer, assocName string, assocDelValue interface{}) error
 
 	UpdateAsociation(assocModel *model.Customer, assocName string, assocDelValue interface{}) error
+
+	//namain count
+	CountTotal
 }
 
 type customerRepository struct {
 	db *gorm.DB
 }
+
+//nambain count
+func (c *customerRepository) CountColumn(cust *model.Customer, column string) int64 {
+
+	result := c.db.Model(&model.Customer{}).Where("code IN ?", cust).Association(column).Count()
+
+	return result
+
+	//db.Model(&user).Where("code IN ?", codes).Association("Languages").Count()
+
+}
+
+// func (c *customerRepository) Count(groupBy string) (int, error) {
+// 	var total int
+// 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("Count(*)").Group(groupBy).First(&total)
+
+// 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("count(*)").Find(&total) //bisa return banyak id di dalam
+
+// 	if err := result.Error; err != nil {
+// 		return 0, err
+// 	}
+// 	return total, nil
+// }
 
 //nambain assoc
 
