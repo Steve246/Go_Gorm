@@ -21,7 +21,7 @@ type CustomerRepository interface {
 
 	Delete(customer *model.Customer) error
 
-	// FindById(id string) (model.Customer, error)
+	FindById(id string) (model.Customer, error)
 	//tambain find by id
 
 	FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) //findby id dengan relation + preload
@@ -38,7 +38,7 @@ type CustomerRepository interface {
 
 	//tambain product many2many
 
-	OpenProductForExistingCustomer(customerWithProduct *model.Customer) error
+	UpdateByModel(payload *model.Customer) error
 }
 
 type customerRepository struct {
@@ -47,8 +47,8 @@ type customerRepository struct {
 
 //nambain many2many
 
-func (c *customerRepository) OpenProductForExistingCustomer(customerWithProduct *model.Customer) error {
-	result := c.db.Model(&customerWithProduct).Updates(customerWithProduct).Error
+func (c *customerRepository) UpdateByModel(payload *model.Customer) error {
+	result := c.db.Model(&payload).Updates(payload).Error
 
 	return result
 }
@@ -218,21 +218,21 @@ func (c *customerRepository) FindAllBy(by map[string]interface{}) ([]model.Custo
 	return customer, nil
 }
 
-// func (c *customerRepository) FindById(id string) (model.Customer, error) {
-// 	var customer model.Customer
-// 	result := c.db.Unscoped().First(&customer, "id = ?", id)
+func (c *customerRepository) FindById(id string) (model.Customer, error) {
+	var customer model.Customer
+	result := c.db.Unscoped().First(&customer, "id = ?", id)
 
-// 	if err := result.Error; err != nil {
-// 		if errors.Is(err, gorm.ErrRecordNotFound) {
-// 			return customer, nil
-// 		} else {
-// 			return customer, err
-// 		}
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return customer, nil
+		} else {
+			return customer, err
+		}
 
-// 	}
+	}
 
-// 	return customer, nil
-// }
+	return customer, nil
+}
 
 func (c *customerRepository) FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) {
 	var customer model.Customer

@@ -154,48 +154,69 @@ func main() {
 
 	//repo khusus produk
 
-	customerRepo := repo.NewCustomerProductRepository(db)
+	// customerRepo := repo.NewCustomerProductRepository(db)
 
-	product01 := model.Product{
-		ProductName: "Kacang Manis",
-		Customer:    nil,
-	}
-	err := customerRepo.Create(&product01)
-	utils.IsError(err)
+	// product01 := model.Product{
+	// 	ProductName: "Taro Snak",
+	// 	Customer:    nil,
+	// }
+	// err := customerRepo.Create(&product01)
+	// utils.IsError(err)
 
 	//bikin repo customer
 
-	repo := repo.NewCustomerRepository(db)
+	// repo := repo.NewCustomerRepository(db)
 
-	customer01 := model.Customer{
-		Id:   "001",
-		Name: "Bulan Menerangi",
-		Address: []model.Address{
-			{
-				StreetName: "JL Jalan Aja",
-				City:       "Ragunan",
-				PostalCode: "12345",
-			},
-		},
-		Phone:   "102030",
-		Email:   "bulan.matahari@gmail.com",
-		Balance: 10000,
-		UserCredential: model.UserCredential{
-			UserName: "bulanbulan",
-			Password: "hahaihi",
-		},
+	// customer01 := model.Customer{
+	// 	Id:   "001",
+	// 	Name: "Bulan Menerangi",
+	// 	Address: []model.Address{
+	// 		{
+	// 			StreetName: "JL Jalan Aja",
+	// 			City:       "Ragunan",
+	// 			PostalCode: "12345",
+	// 		},
+	// 	},
+	// 	Phone:   "102030",
+	// 	Email:   "bulan.matahari@gmail.com",
+	// 	Balance: 10000,
+	// 	UserCredential: model.UserCredential{
+	// 		UserName: "bulanbulan",
+	// 		Password: "hahaihi",
+	// 	},
 
-		Products: []*model.Product{
-			{
-				ProductName: "Caca Marina",
-			},
-			{
-				ProductName: "Beng Beng",
-			},
+	// 	Products: []*model.Product{
+	// 		{
+	// 			ProductName: "Caca Marina",
+	// 		},
+	// 		{
+	// 			ProductName: "Beng Beng",
+	// 		},
+	// 	},
+	// }
+
+	// err = repo.Create(&customer01)
+	// utils.IsError(err)
+
+	//Case 2
+	//Menambahkan product baru ke customer yang sudah terdafar
+
+	customerRepo := repo.NewCustomerRepository(db)
+
+	cust, err := customerRepo.FindById("001")
+	utils.IsError(err)
+
+	cust.Products = []*model.Product{
+		{
+			ProductName: "Silver King",
+		},
+		{
+			ProductName: "Keju Ale",
 		},
 	}
 
-	err = repo.Create(&customer01)
+	err = customerRepo.UpdateByModel(&cust)
+
 	utils.IsError(err)
 
 }
