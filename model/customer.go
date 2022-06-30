@@ -12,7 +12,7 @@ type Customer struct {
 	IsStatus         int `gorm:"default:1"` //jangan pake bool, pake int
 	UserCredentialID uint
 	UserCredential   UserCredential
-	Products         []*Product `gorm:"many2many:customer_products"`
+	Products         []*Product `gorm:"many2many:customer_products;"`
 	BaseModel        BaseModel  `gorm:"embedded"`
 }
 

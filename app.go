@@ -2,6 +2,7 @@ package main
 
 import (
 	"go_gorm/config"
+	"go_gorm/model"
 )
 
 func main() {
@@ -357,5 +358,17 @@ func main() {
 	// err := customerRepo.UpdateAsociation(&cust, "Products", newProducttSlice)
 
 	// utils.IsError(err)
+
+	//bikin join, ini gak ada
+
+	type Hasil struct {
+		Product  string
+		Quantity int
+	}
+
+	db.Model(&model.Customer{}).Select("customers.Products").Joins("left join products on products.Id = customers.Id").Scan(&Hasil{})
+
+	// customerRepo := repo.NewCustomerRepository(db)
+	// productRepo := repo.NewCustomerProductRepository(db)
 
 }

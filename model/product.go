@@ -9,7 +9,7 @@ import (
 type Product struct {
 	gorm.Model
 	ProductName string      `gorm:"column:name; not null"`
-	Customer    []*Customer `gorm:"many2many:customer_products"`
+	Customer    []*Customer `gorm:"many2many:customer_products;"`
 }
 
 func (p Product) TableName() string {
