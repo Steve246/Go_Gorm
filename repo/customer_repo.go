@@ -1,187 +1,196 @@
 package repo
 
-import (
-	"errors"
-	"fmt"
-	"go_gorm/model"
+// type CustomerRepository interface {
+// 	Create(customer *model.Customer) error
+// 	// UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error
+// 	// //pake map
 
-	"gorm.io/gorm"
-)
+// 	// UpdatePakeStruct(customer *model.Customer, by model.Customer) error //pake struct
 
-type CustomerRepository interface {
-	Create(customer *model.Customer) error
-	// UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error
-	// //pake map
+// 	//update dibawah, bisa keupdate di dua tabel
 
-	// UpdatePakeStruct(customer *model.Customer, by model.Customer) error //pake struct
+// 	UpdateBy(existingCustomer *model.Customer) error //update pake relation
 
-	//update dibawah, bisa keupdate di dua tabel
+// 	Delete(customer *model.Customer) error
 
-	UpdateBy(existingCustomer *model.Customer) error //update pake relation
+// 	// FindById(id string) (model.Customer, error)
+// 	//tambain find by id
 
-	Delete(customer *model.Customer) error
+// 	FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) //findby id dengan relation + preload
 
-	// FindById(id string) (model.Customer, error)
-	//tambain find by id
+// 	FindFirstBy(by map[string]interface{}) (model.Customer, error)
+// 	FindAllBy(by map[string]interface{}) ([]model.Customer, error)
+// 	FindBy(by string, vals ...interface{}) ([]model.Customer, error)
 
-	FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) //findby id dengan relation + preload
-
-	FindFirstBy(by map[string]interface{}) (model.Customer, error)
-	FindAllBy(by map[string]interface{}) ([]model.Customer, error)
-	FindBy(by string, vals ...interface{}) ([]model.Customer, error)
-
-	//tambain aggregate
-	BaseRepositoryAggregation
-	BaseRepositoryPaging
-}
-
-type customerRepository struct {
-	db *gorm.DB
-}
-
-//nambain count, group by, and paging
-
-// func (c *customerRepository) Count(groupBy string) (int, error) {
-// 	var total int
-// 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("Count(*)").Group(groupBy).First(&total)
-
-// 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("count(*)").Find(&total) //bisa return banyak id di dalam
-
-// 	if err := result.Error; err != nil {
-// 		return 0, err
-// 	}
-// 	return total, nil
+// 	//tambain aggregate
+// 	BaseRepositoryAggregation
+// 	BaseRepositoryPaging
 // }
 
-//count diubah jadi dibawah biar ada opsi
+// type customerRepository struct {
+// 	db *gorm.DB
+// }
 
-// func (c *customerRepository) Count(groupBy string) (int64, error) {
-// 	var total int64
-// 	var result *gorm.DB
+// //nambain count, group by, and paging
+
+// // func (c *customerRepository) Count(groupBy string) (int, error) {
+// // 	var total int
+// // 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("Count(*)").Group(groupBy).First(&total)
+
+// // 	// result := c.db.Model(&model.Customer{}).Unscoped().Select("count(*)").Find(&total) //bisa return banyak id di dalam
+
+// // 	if err := result.Error; err != nil {
+// // 		return 0, err
+// // 	}
+// // 	return total, nil
+// // }
+
+// //count diubah jadi dibawah biar ada opsi
+
+// // func (c *customerRepository) Count(groupBy string) (int64, error) {
+// // 	var total int64
+// // 	var result *gorm.DB
+
+// // 	sqlStmt := c.db.Model(&model.Customer{}).Unscoped()
+
+// // 	if groupBy == "" {
+// // 		result = sqlStmt.Count(&total)
+// // 	} else {
+// // 		result = sqlStmt.Select("count(*)").Group(groupBy).First(&total)
+
+// // 	}
+
+// // 	if err := result.Error; err != nil {
+// // 		return 0, err
+// // 	}
+// // 	return total, nil
+
+// // }
+
+// //diubah lagi jadi bawah
+
+// func (c *customerRepository) Count(result interface{}, groupBy string) error {
+
+// 	var res *gorm.DB
 
 // 	sqlStmt := c.db.Model(&model.Customer{}).Unscoped()
 
 // 	if groupBy == "" {
-// 		result = sqlStmt.Count(&total)
+// 		t, ok := result.(*int64)
+
+// 		if ok {
+// 			res = sqlStmt.Count(t)
+// 		} else {
+// 			return errors.New("must be int64")
+// 		}
+
 // 	} else {
-// 		result = sqlStmt.Select("count(*)").Group(groupBy).First(&total)
-
+// 		res = sqlStmt.Select(fmt.Sprintf("%s, %s", groupBy, "count(*) as total")).Group(groupBy).Find(result)
+// 	}
+// 	if err := res.Error; err != nil {
+// 		return err
 // 	}
 
-// 	if err := result.Error; err != nil {
-// 		return 0, err
-// 	}
-// 	return total, nil
+// 	return nil
 
 // }
 
-//diubah lagi jadi bawah
+// func (c *customerRepository) GroupBy(result interface{}, selectedBy string, whereBy map[string]interface{}, groupBy string) error {
+// 	res := c.db.Model(&model.Customer{}).Select(selectedBy).Where(whereBy).Group(groupBy).Find(result)
 
-func (c *customerRepository) Count(result interface{}, groupBy string) error {
+// 	if err := res.Error; err != nil {
+// 		if errors.Is(err, gorm.ErrRecordNotFound) {
+// 			return nil
+// 		} else {
+// 			return err
+// 		}
+// 	}
 
-	var res *gorm.DB
+// 	return nil
+// }
 
-	sqlStmt := c.db.Model(&model.Customer{}).Unscoped()
+// func (c *customerRepository) Paging(page int, itemPerPage int) (interface{}, error) {
+// 	var customers []model.Customer
 
-	if groupBy == "" {
-		t, ok := result.(*int64)
+// 	offset := itemPerPage * (page - 1)
+// 	res := c.db.Order("created_at").Limit(itemPerPage).Offset(offset).Find(&customers)
 
-		if ok {
-			res = sqlStmt.Count(t)
-		} else {
-			return errors.New("must be int64")
-		}
+// 	if err := res.Error; err != nil {
+// 		if errors.Is(err, gorm.ErrRecordNotFound) {
+// 			return nil, nil
+// 		} else {
+// 			return nil, err
+// 		}
+// 	}
 
-	} else {
-		res = sqlStmt.Select(fmt.Sprintf("%s, %s", groupBy, "count(*) as total")).Group(groupBy).Find(result)
-	}
-	if err := res.Error; err != nil {
-		return err
-	}
+// 	return customers, nil
+// }
 
-	return nil
-
-}
-
-func (c *customerRepository) GroupBy(result interface{}, selectedBy string, whereBy map[string]interface{}, groupBy string) error {
-	res := c.db.Model(&model.Customer{}).Select(selectedBy).Where(whereBy).Group(groupBy).Find(result)
-
-	if err := res.Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		} else {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (c *customerRepository) Paging(page int, itemPerPage int) (interface{}, error) {
-	var customers []model.Customer
-
-	offset := itemPerPage * (page - 1)
-	res := c.db.Order("created_at").Limit(itemPerPage).Offset(offset).Find(&customers)
-
-	if err := res.Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		} else {
-			return nil, err
-		}
-	}
-
-	return customers, nil
-}
-
-func (c *customerRepository) FindFirstBy(by map[string]interface{}) (model.Customer, error) {
-	var customer model.Customer
-	result := c.db.Unscoped().Where(by).First(&customer)
-
-	if err := result.Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return customer, nil
-		} else {
-			return customer, err
-		}
-	}
-	return customer, nil
-}
-
-func (c *customerRepository) FindBy(by string, vals ...interface{}) ([]model.Customer, error) {
-	var customer []model.Customer
-	result := c.db.Unscoped().Where(by, vals...).Find(&customer)
-
-	if err := result.Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-
-			return customer, nil
-		} else {
-
-			return customer, err
-		}
-
-	}
-	return customer, nil
-}
-
-func (c *customerRepository) FindAllBy(by map[string]interface{}) ([]model.Customer, error) {
-	var customer []model.Customer
-	result := c.db.Unscoped().Where(by).Find(&customer)
-	if err := result.Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return customer, nil
-		} else {
-			return customer, err
-		}
-	}
-
-	return customer, nil
-}
-
-// func (c *customerRepository) FindById(id string) (model.Customer, error) {
+// func (c *customerRepository) FindFirstBy(by map[string]interface{}) (model.Customer, error) {
 // 	var customer model.Customer
-// 	result := c.db.Unscoped().First(&customer, "id = ?", id)
+// 	result := c.db.Unscoped().Where(by).First(&customer)
+
+// 	if err := result.Error; err != nil {
+// 		if errors.Is(err, gorm.ErrRecordNotFound) {
+// 			return customer, nil
+// 		} else {
+// 			return customer, err
+// 		}
+// 	}
+// 	return customer, nil
+// }
+
+// func (c *customerRepository) FindBy(by string, vals ...interface{}) ([]model.Customer, error) {
+// 	var customer []model.Customer
+// 	result := c.db.Unscoped().Where(by, vals...).Find(&customer)
+
+// 	if err := result.Error; err != nil {
+// 		if errors.Is(err, gorm.ErrRecordNotFound) {
+
+// 			return customer, nil
+// 		} else {
+
+// 			return customer, err
+// 		}
+
+// 	}
+// 	return customer, nil
+// }
+
+// func (c *customerRepository) FindAllBy(by map[string]interface{}) ([]model.Customer, error) {
+// 	var customer []model.Customer
+// 	result := c.db.Unscoped().Where(by).Find(&customer)
+// 	if err := result.Error; err != nil {
+// 		if errors.Is(err, gorm.ErrRecordNotFound) {
+// 			return customer, nil
+// 		} else {
+// 			return customer, err
+// 		}
+// 	}
+
+// 	return customer, nil
+// }
+
+// // func (c *customerRepository) FindById(id string) (model.Customer, error) {
+// // 	var customer model.Customer
+// // 	result := c.db.Unscoped().First(&customer, "id = ?", id)
+
+// // 	if err := result.Error; err != nil {
+// // 		if errors.Is(err, gorm.ErrRecordNotFound) {
+// // 			return customer, nil
+// // 		} else {
+// // 			return customer, err
+// // 		}
+
+// // 	}
+
+// // 	return customer, nil
+// // }
+
+// func (c *customerRepository) FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) {
+// 	var customer model.Customer
+
+// 	result := c.db.Preload(preload).Where(by).First(&customer)
 
 // 	if err := result.Error; err != nil {
 // 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -193,67 +202,50 @@ func (c *customerRepository) FindAllBy(by map[string]interface{}) ([]model.Custo
 // 	}
 
 // 	return customer, nil
+
 // }
 
-func (c *customerRepository) FindFirstWithPreload(by map[string]interface{}, preload string) (interface{}, error) {
-	var customer model.Customer
+// // func (c *customerRepository) Delete(id string) error {
+// // 	result := c.db.Delete(&model.Customer{}, id).Error
+// // 	return result
+// // } //kalau mau hard delete
 
-	result := c.db.Preload(preload).Where(by).First(&customer)
-
-	if err := result.Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return customer, nil
-		} else {
-			return customer, err
-		}
-
-	}
-
-	return customer, nil
-
-}
-
-// func (c *customerRepository) Delete(id string) error {
-// 	result := c.db.Delete(&model.Customer{}, id).Error
+// func (c *customerRepository) Delete(customer *model.Customer) error {
+// 	result := c.db.Delete(customer).Error
 // 	return result
-// } //kalau mau hard delete
+// }
 
-func (c *customerRepository) Delete(customer *model.Customer) error {
-	result := c.db.Delete(customer).Error
-	return result
-}
+// // func (c *customerRepository) UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error {
 
-// func (c *customerRepository) UpdatePakeMap(customer *model.Customer, by map[string]interface{}) error {
+// // 	result := c.db.Model(customer).Updates(by).Error
+// // 	return result
 
-// 	result := c.db.Model(customer).Updates(by).Error
+// // }
+
+// // func (c *customerRepository) UpdatePakeStruct(customer *model.Customer, by model.Customer) error {
+// // 	result := c.db.Model(customer).Updates(by)
+
+// // 	if err := result.Error; err != nil {
+// // 		return err
+// // 	}
+// // 	return nil
+// // }
+
+// func (c *customerRepository) UpdateBy(existingCustomer *model.Customer) error {
+// 	result := c.db.Session(&gorm.Session{FullSaveAssociations: true}).Save(existingCustomer).Error
+
 // 	return result
 
 // }
 
-// func (c *customerRepository) UpdatePakeStruct(customer *model.Customer, by model.Customer) error {
-// 	result := c.db.Model(customer).Updates(by)
+// func (c *customerRepository) Create(customer *model.Customer) error {
+// 	result := c.db.Create(customer).Error
 
-// 	if err := result.Error; err != nil {
-// 		return err
-// 	}
-// 	return nil
+// 	return result
 // }
 
-func (c *customerRepository) UpdateBy(existingCustomer *model.Customer) error {
-	result := c.db.Session(&gorm.Session{FullSaveAssociations: true}).Save(existingCustomer).Error
-
-	return result
-
-}
-
-func (c *customerRepository) Create(customer *model.Customer) error {
-	result := c.db.Create(customer).Error
-
-	return result
-}
-
-func NewCustomerRepository(db *gorm.DB) CustomerRepository {
-	repo := new(customerRepository)
-	repo.db = db
-	return repo
-}
+// func NewCustomerRepository(db *gorm.DB) CustomerRepository {
+// 	repo := new(customerRepository)
+// 	repo.db = db
+// 	return repo
+// }

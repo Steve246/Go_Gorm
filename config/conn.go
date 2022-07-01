@@ -20,7 +20,7 @@ func (c *Config) initDb() {
 	dbPort := os.Getenv("DB_PORT")         //set DB_PORT=5432
 	dbUser := os.Getenv("DB_USER")         //set DB_USER=postgres
 	dbPassword := os.Getenv("DB_PASSWORD") //set DB_PASSWORD=12345678
-	dbName := os.Getenv("DB_NAME")         //set DB_NAME=db_enigma_shop_v2
+	dbName := os.Getenv("DB_NAME")         //set DB_NAME=db_gorms_wmb
 
 	env := os.Getenv("ENV")
 
@@ -37,7 +37,7 @@ func (c *Config) initDb() {
 		c.Db = db.Debug()
 	} else if env == "migration" {
 		c.Db = db.Debug()
-		err := c.Db.AutoMigrate(&model.Customer{}, &model.Address{})
+		err := c.Db.AutoMigrate(&model.Menu{}, &model.Menu_Price{})
 
 		if err != nil {
 			return
